@@ -17,7 +17,15 @@ using Limitless.Runtime.Interfaces;
 
 namespace Limitless.Logger
 {
-    public class Logger : ILogger
+    public class LoggerConfig
+    {
+        public LoggerConfig()
+        {
+
+        }
+    }
+
+    public class Logger : IModule, ILogger
     {
         /// <summary>
         /// Implemented from interface 
@@ -25,7 +33,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Trace(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Trace: {format}", args);
         }
 
         /// <summary>
@@ -34,7 +42,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Debug(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Debug: {format}", args);
         }
 
         /// <summary>
@@ -43,7 +51,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Info(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Info: {format}", args);
         }
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Warning(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Warning: {format}", args);
         }
 
         /// <summary>
@@ -61,7 +69,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Error(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Error: {format}", args);
         }
 
         /// <summary>
@@ -70,7 +78,26 @@ namespace Limitless.Logger
         /// </summary>
         public void Critical(string format, params object[] args)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Critical: {format}", args);
+        }
+
+        /// <summary>
+        /// Implemented from interface
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.Configure(dynamic)"/>
+        /// </summary>
+        public void Configure(dynamic settings)
+        {
+            // Nothing to configure
+        }
+
+        /// <summary>
+        /// Implemented from interface
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.GetConfigurationType"/>
+        /// </summary>
+        public Type GetConfigurationType()
+        {
+            // No configuration type
+            return typeof(LoggerConfig);
         }
     }
 }
