@@ -14,6 +14,7 @@
 using System;
 
 using Limitless.Runtime.Interfaces;
+using System.Runtime.CompilerServices;
 
 namespace Limitless.Logger
 {
@@ -25,15 +26,31 @@ namespace Limitless.Logger
         }
     }
 
+    /// <summary>
+    /// An NLog-based default logger for Project Limitless.
+    /// </summary>
     public class Logger : IModule, ILogger
     {
+        /// <summary>
+        /// The NLog logger
+        /// </summary>
+        NLog.Logger _log;
+
+        /// <summary>
+        /// Standard constructor.
+        /// </summary>
+        public Logger()
+        {
+            _log = NLog.LogManager.GetCurrentClassLogger();
+        }
+
         /// <summary>
         /// Implemented from interface 
         /// <see cref="Limitless.Runtime.Interfaces.ILogger.Trace(string, object[])"/>
         /// </summary>
         public void Trace(string format, params object[] args)
         {
-            Console.WriteLine($"Trace: {format}", args);
+            _log.Trace(format, args);
         }
 
         /// <summary>
@@ -42,7 +59,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Debug(string format, params object[] args)
         {
-            Console.WriteLine($"Debug: {format}", args);
+            _log.Debug(format, args);
         }
 
         /// <summary>
@@ -51,7 +68,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Info(string format, params object[] args)
         {
-            Console.WriteLine($"Info: {format}", args);
+            _log.Info(format, args);
         }
 
         /// <summary>
@@ -60,7 +77,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Warning(string format, params object[] args)
         {
-            Console.WriteLine($"Warning: {format}", args);
+            _log.Warn(format, args);
         }
 
         /// <summary>
@@ -69,7 +86,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Error(string format, params object[] args)
         {
-            Console.WriteLine($"Error: {format}", args);
+            _log.Error(format, args);
         }
 
         /// <summary>
@@ -78,7 +95,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Critical(string format, params object[] args)
         {
-            Console.WriteLine($"Critical: {format}", args);
+            _log.Fatal(format, args);
         }
 
         /// <summary>
