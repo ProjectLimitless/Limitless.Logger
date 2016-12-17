@@ -12,45 +12,48 @@
 */
 
 using System;
+using System.Reflection;
+using System.Diagnostics;
 
 using Limitless.Runtime.Interfaces;
-using System.Runtime.CompilerServices;
 
 namespace Limitless.Logger
 {
-    public class LoggerConfig
-    {
-        public LoggerConfig()
-        {
-
-        }
-    }
-
     /// <summary>
     /// An NLog-based default logger for Project Limitless.
     /// </summary>
     public class Logger : IModule, ILogger
     {
         /// <summary>
-        /// The NLog logger
+        /// The NLog logger.
         /// </summary>
-        NLog.Logger _log;
+        private NLog.Logger _log;
+        /// <summary>
+        /// Module configuration.
+        /// </summary>
+        private LoggerConfig _config;
 
         /// <summary>
         /// Standard constructor.
         /// </summary>
         public Logger()
         {
+            _config = new LoggerConfig();
             _log = NLog.LogManager.GetCurrentClassLogger();
         }
-
+        
         /// <summary>
         /// Implemented from interface 
         /// <see cref="Limitless.Runtime.Interfaces.ILogger.Trace(string, object[])"/>
         /// </summary>
         public void Trace(string format, params object[] args)
         {
-            _log.Trace(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Trace($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -59,7 +62,12 @@ namespace Limitless.Logger
         /// </summary>
         public void Debug(string format, params object[] args)
         {
-            _log.Debug(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Debug($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -68,7 +76,12 @@ namespace Limitless.Logger
         /// </summary>
         public void Info(string format, params object[] args)
         {
-            _log.Info(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Info($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -77,7 +90,12 @@ namespace Limitless.Logger
         /// </summary>
         public void Warning(string format, params object[] args)
         {
-            _log.Warn(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Warn($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -86,7 +104,12 @@ namespace Limitless.Logger
         /// </summary>
         public void Error(string format, params object[] args)
         {
-            _log.Error(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Error($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -95,7 +118,12 @@ namespace Limitless.Logger
         /// </summary>
         public void Critical(string format, params object[] args)
         {
-            _log.Fatal(format, args);
+            string fullMethodName = "";
+            if (_config.IncludeCallSite)
+            {
+                fullMethodName = $"{Assembly.GetCallingAssembly().GetName().Name}.{GetCallingMethod()}|";
+            }
+            _log.Fatal($"{fullMethodName}{format}", args);
         }
 
         /// <summary>
@@ -104,7 +132,7 @@ namespace Limitless.Logger
         /// </summary>
         public void Configure(dynamic settings)
         {
-            // Nothing to configure
+            _config = (LoggerConfig)settings;
         }
 
         /// <summary>
@@ -115,6 +143,17 @@ namespace Limitless.Logger
         {
             // No configuration type
             return typeof(LoggerConfig);
+        }
+
+        /// <summary>
+        /// Get the calling method for logging.
+        /// </summary>
+        /// <returns>The name of the calling method</returns>
+        private string GetCallingMethod()
+        {
+            // Skip 2 frames as they are this call and the interface call
+            StackFrame stackFrame = new StackFrame(2);
+            return stackFrame.GetMethod().Name;
         }
     }
 }
