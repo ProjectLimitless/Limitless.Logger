@@ -132,6 +132,10 @@ namespace Limitless.Logger
         /// </summary>
         public void Configure(dynamic settings)
         {
+            if (settings == null)
+            {
+                throw new NullReferenceException("Settings can not be null");
+            }
             _config = (LoggerConfig)settings;
         }
 
