@@ -145,7 +145,6 @@ namespace Limitless.Logger
         /// </summary>
         public Type GetConfigurationType()
         {
-            // No configuration type
             return typeof(LoggerConfig);
         }
 
