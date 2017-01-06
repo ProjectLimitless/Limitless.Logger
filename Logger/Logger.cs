@@ -155,7 +155,7 @@ namespace Limitless.Logger
         private string GetCallingMethod()
         {
             // Skip 2 frames as they are this call and the interface call
-            StackFrame stackFrame = new StackFrame(2);
+            var stackFrame = new StackFrame(2);
             return stackFrame.GetMethod().Name;
         }
 
