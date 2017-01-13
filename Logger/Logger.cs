@@ -137,6 +137,69 @@ namespace Limitless.Logger
                 throw new NullReferenceException("Settings can not be null");
             }
             _config = (LoggerConfig)settings;
+            UpdateLevel(_config.Level);
+        }
+
+        /// <summary>
+        /// Implemented from interface
+        /// <see cref="Limitless.Runtime.Interfaces.ILogger.UpdateLevel(string)"/>
+        /// </summary>
+        public void UpdateLevel(string level)
+        {
+            // Update each rule set in the initial config
+            foreach (var rule in NLog.LogManager.Configuration.LoggingRules)
+            {
+                // Disable all rules before enabling new ones
+                rule.DisableLoggingForLevel(NLog.LogLevel.Trace);
+                rule.DisableLoggingForLevel(NLog.LogLevel.Debug);
+                rule.DisableLoggingForLevel(NLog.LogLevel.Info);
+                rule.DisableLoggingForLevel(NLog.LogLevel.Warn);
+                rule.DisableLoggingForLevel(NLog.LogLevel.Error);
+                rule.DisableLoggingForLevel(NLog.LogLevel.Fatal);
+
+                switch (level.ToLower())
+                {
+                    case "trace":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Trace,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                    case "debug":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Debug,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                    case "info":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Info,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                    case "warning":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Warn,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                    case "error":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Error,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                    case "fatal":
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Fatal,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
+                }
+            }
+            // Trigger update
+            NLog.LogManager.Flush();
+            NLog.LogManager.ReconfigExistingLoggers();
         }
 
         /// <summary>

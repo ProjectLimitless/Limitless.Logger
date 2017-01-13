@@ -23,6 +23,10 @@ namespace Limitless.Logger
         /// in the log output. Defaults to true.
         /// </summary>
         public bool IncludeCallSite { get; set; } = true;
+        /// <summary>
+        /// Sets and gets the log level to log.
+        /// </summary>
+        public string Level { get; set; } = "info";
 
         /// <summary>
         /// Standard constructor
