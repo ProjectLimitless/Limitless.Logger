@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Diagnostics;
 
 using Limitless.Runtime.Interfaces;
+using Limitless.Runtime.Enums;
 
 namespace Limitless.Logger
 {
@@ -137,14 +138,35 @@ namespace Limitless.Logger
                 throw new NullReferenceException("Settings can not be null");
             }
             _config = (LoggerConfig)settings;
-            UpdateLevel(_config.Level);
+            
+            switch (_config.Level.ToLower())
+            {
+                case "trace":
+                    UpdateLevel(LogLevel.Trace);
+                    break;
+                case "debug":
+                    UpdateLevel(LogLevel.Debug);
+                    break;
+                case "info":
+                    UpdateLevel(LogLevel.Info);
+                    break;
+                case "warning":
+                    UpdateLevel(LogLevel.Warning);
+                    break;
+                case "error":
+                    UpdateLevel(LogLevel.Error);
+                    break;
+                case "critical":
+                    UpdateLevel(LogLevel.Critical);
+                    break;
+            }
         }
 
         /// <summary>
         /// Implemented from interface
         /// <see cref="Limitless.Runtime.Interfaces.ILogger.UpdateLevel(string)"/>
         /// </summary>
-        public void UpdateLevel(string level)
+        public void UpdateLevel(LogLevel level)
         {
             // Update each rule set in the initial config
             foreach (var rule in NLog.LogManager.Configuration.LoggingRules)
@@ -157,39 +179,39 @@ namespace Limitless.Logger
                 rule.DisableLoggingForLevel(NLog.LogLevel.Error);
                 rule.DisableLoggingForLevel(NLog.LogLevel.Fatal);
 
-                switch (level.ToLower())
+                switch (level)
                 {
-                    case "trace":
+                    case LogLevel.Trace:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Trace,
                             NLog.LogLevel.Fatal
                         );
                         break;
-                    case "debug":
+                    case LogLevel.Debug:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Debug,
                             NLog.LogLevel.Fatal
                         );
                         break;
-                    case "info":
+                    case LogLevel.Info:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Info,
                             NLog.LogLevel.Fatal
                         );
                         break;
-                    case "warning":
+                    case LogLevel.Warning:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Warn,
                             NLog.LogLevel.Fatal
                         );
                         break;
-                    case "error":
+                    case LogLevel.Error:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Error,
                             NLog.LogLevel.Fatal
                         );
                         break;
-                    case "fatal":
+                    case LogLevel.Critical:
                         rule.EnableLoggingForLevels(
                             NLog.LogLevel.Fatal,
                             NLog.LogLevel.Fatal
