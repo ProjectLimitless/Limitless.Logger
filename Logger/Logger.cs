@@ -250,7 +250,7 @@ namespace Limitless.Logger
         /// </summary>
         public string GetTitle()
         {
-            var assembly = typeof(Logger).Assembly;
+            var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
             if (attribute != null)
             {
@@ -265,7 +265,7 @@ namespace Limitless.Logger
         /// </summary>
         public string GetAuthor()
         {
-            var assembly = typeof(Logger).Assembly;
+            var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
             if (attribute != null)
             {
@@ -280,7 +280,7 @@ namespace Limitless.Logger
         /// </summary>
         public string GetVersion()
         {
-            var assembly = typeof(Logger).Assembly;
+            var assembly = GetType().Assembly;
             return assembly.GetName().Version.ToString();
         }
 
@@ -290,7 +290,7 @@ namespace Limitless.Logger
         /// </summary>
         public string GetDescription()
         {
-            var assembly = typeof(Logger).Assembly;
+            var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
             if (attribute != null)
             {
