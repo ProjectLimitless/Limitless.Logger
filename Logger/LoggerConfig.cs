@@ -27,12 +27,5 @@ namespace Limitless.Logger
         /// Sets and gets the log level to log.
         /// </summary>
         public string Level { get; set; } = "info";
-
-        /// <summary>
-        /// Standard constructor
-        /// </summary>
-        public LoggerConfig()
-        {
-        }
     }
 }

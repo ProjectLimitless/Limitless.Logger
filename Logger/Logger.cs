@@ -28,14 +28,14 @@ namespace Limitless.Logger
         /// <summary>
         /// The NLog logger.
         /// </summary>
-        private NLog.Logger _log;
+        private readonly NLog.Logger _log;
         /// <summary>
         /// Module configuration.
         /// </summary>
         private LoggerConfig _config;
 
         /// <summary>
-        /// Standard constructor.
+        /// Creates a new instance of an NLog backed logger.
         /// </summary>
         public Logger()
         {
@@ -159,6 +159,9 @@ namespace Limitless.Logger
                 case "critical":
                     UpdateLevel(LogLevel.Critical);
                     break;
+                default:
+                    UpdateLevel(LogLevel.Info);
+                    break;
             }
         }
 
@@ -217,6 +220,12 @@ namespace Limitless.Logger
                             NLog.LogLevel.Fatal
                         );
                         break;
+                    default:
+                        rule.EnableLoggingForLevels(
+                            NLog.LogLevel.Info,
+                            NLog.LogLevel.Fatal
+                        );
+                        break;
                 }
             }
             // Trigger update
@@ -246,37 +255,29 @@ namespace Limitless.Logger
 
         /// <summary>
         /// Implemented from interface 
-        /// <see cref="Limitless.Runtime.Interface.IModule.GetTitle"/>
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.GetTitle"/>
         /// </summary>
         public string GetTitle()
         {
             var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyTitleAttribute>();
-            if (attribute != null)
-            {
-                return attribute.Title;
-            }
-            return "Unknown";
+            return attribute != null ? attribute.Title : "Unknown";
         }
 
         /// <summary>
         /// Implemented from interface 
-        /// <see cref="Limitless.Runtime.Interface.IModule.GetAuthor"/>
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.GetAuthor"/>
         /// </summary>
         public string GetAuthor()
         {
             var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-            if (attribute != null)
-            {
-                return attribute.Company;
-            }
-            return "Unknown";
+            return attribute != null ? attribute.Company : "Unknown";
         }
 
         /// <summary>
         /// Implemented from interface 
-        /// <see cref="Limitless.Runtime.Interface.IModule.GetVersion"/>
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.GetVersion"/>
         /// </summary>
         public string GetVersion()
         {
@@ -286,17 +287,13 @@ namespace Limitless.Logger
 
         /// <summary>
         /// Implemented from interface 
-        /// <see cref="Limitless.Runtime.Interface.IModule.GetDescription"/>
+        /// <see cref="Limitless.Runtime.Interfaces.IModule.GetDescription"/>
         /// </summary>
         public string GetDescription()
         {
             var assembly = GetType().Assembly;
             var attribute = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>();
-            if (attribute != null)
-            {
-                return attribute.Description;
-            }
-            return "Unknown";
+            return attribute != null ? attribute.Description : "Unknown";
         }
     }
 }
